@@ -13,6 +13,13 @@ const { Tag, Product, ProductTag } = require( "../../models" );
 --------------------------------------------*/
 router.post( "/", async ( req, res ) => {
 
+	/* 
+	req.body should look like this...
+	{
+		"tag_name": "kids"
+	}
+	*/
+
 	try {
 		const newTag = await Tag.create(req.body);
 		res.status(200).json(newTag);
@@ -49,7 +56,7 @@ router.get( "/:id", async ( req, res ) => {
 		const tagData = await Tag.findByPk(req.params.id, { include: [{ model: Product }], });
 	
 		if (!tagData) {
-			res.status(404).json({ message: "Tag not found" });
+			res.status(404).json( { message: `Tag ID ${req.params.id} not found`} );
 			return;
 		}
 	
@@ -79,11 +86,11 @@ router.put( "/:id", async ( req, res ) => {
 		);
 	
 		if (!updateTag[0]) {
-			res.status(404).json("Tag not found");
+			res.status(404).json({ message: `Tag ID ${req.params.id} not found`} );
 			return;
 		}
 	
-		res.status(200).json("Tag Updated");
+		res.status(200).json( { message: `Tag ID ${req.params.id} has been updated.` } );
 	
 	} catch (err) {
 		res.status(500).json(err);
@@ -104,11 +111,11 @@ router.delete( "/:id", async ( req, res ) => {
 		});
 	
 		if (!deleteTag) {
-			res.status(404).json( "Tag not found" );
+			res.status(404).json( { message: `Tag ID ${req.params.id} not found`} );
 			return;
 		}
 	
-		res.status(200).json( "Tag Deleted" );
+		res.status(200).json( { message: `Tag ID ${req.params.id} has been deleted.` } );
 	
 	} catch (err) {
 		res.status(500).json(err);

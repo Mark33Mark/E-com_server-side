@@ -12,12 +12,14 @@ const { Product, Category, Tag, ProductTag } = require( "../../models" );
 --------------------------------------------*/
 router.post( "/", async ( req, res ) => {
 	
-	/* req.body should look like this...
+	/* 
+	req.body should look like this...
     {
-		product_name: "Basketball",
-		price: 200.00,
-		stock: 3,
-		tagIds: [1, 2, 3, 4]
+		"product_name": "Basketball",
+		"price": 200.00,
+		"stock": 3,
+		"category_id": 8,
+		"tagIds": [1, 2, 3, 4]
     }
   */
 
@@ -72,7 +74,7 @@ router.get( "/:id", async ( req, res ) => {
 			include: [{ model: Category }, { model: Tag }],
 		});
 		if (!productData) {
-			res.status(404).json({ message: "No products found with that id!" });
+			res.status(404).json({ message: `Sorry, there are no product with ID ${req.params.id} in the database.`});
 			return;
 		}
 		res.status(200).json(productData);
@@ -122,6 +124,7 @@ router.put( "/:id", async ( req, res ) => {
 				ProductTag.bulkCreate(newProductTags),
 			]);
 		})
+
 		.then(( updatedProductTags ) => res.json( updatedProductTags ))
 		.catch(( err ) => {
 
@@ -143,10 +146,10 @@ router.delete( "/:id", async ( req, res ) => {
 			}
 		});
 		if (!productData) {
-			res.status(404).json({message: "No product with that id!"});
+			res.status(404).json( { message: `Sorry, there is no product with ID ${req.params.id} in the database.`} );
 			return;
 		}
-		res.status(200).json(productData);
+		res.status(200).json( { message: `Tag ID ${req.params.id} has been deleted.` } );
 	} catch (err) {
 		res.status(500).json(err);
 	}
