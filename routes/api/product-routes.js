@@ -92,9 +92,7 @@ router.put( "/:id", async ( req, res ) => {
 
 	// update product data
 	Product.update( req.body, {
-		where: {
-			id: req.params.id,
-		},
+		where: { id: req.params.id },
 	})
 		.then(( product ) => {
 			// find all associated tags from ProductTag
@@ -121,7 +119,7 @@ router.put( "/:id", async ( req, res ) => {
 			// run both actions
 			return Promise.all([
 				ProductTag.destroy({ where: { id: productTagsToRemove } }),
-				ProductTag.bulkCreate(newProductTags),
+				ProductTag.bulkCreate( newProductTags ),
 			]);
 		})
 
